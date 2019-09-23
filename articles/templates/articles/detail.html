@@ -1,0 +1,49 @@
+{% extends 'articles/base.html' %}
+{% load bootstrap4 %}
+{% block body %}
+<h1>{{ article.id }}번 글</h1>
+<h2>{{ article.title }}</h2>
+<p>작성일자 : {{ article.created_at }}</p>
+<p>수정일자 : {{ article.updated_at }}</p>
+<hr>
+<p>{{ article.content }}</p>
+<img src="{{ article.image.url }}" alt="article.image.name"><br>
+<!-- a tag : GET -->
+<a href="{% url 'articles:index' %}">목록으로</a>
+<form action="{% url 'articles:delete' article.pk %}" method="POST" 
+onclick="return confirm('진짜 지울래?')">
+    {% csrf_token %}
+    <input type="submit" value="삭제">
+</form>
+<a href="{% url 'articles:update' article.pk %}">수정하기</a>
+<hr>
+<h3>댓글 작성 </h3>
+<h4>댓글 수 : {{ comments.count }}</h4>
+
+<form action="{% url 'articles:comment_create' article.pk %}" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form comment_form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    {% endbuttons %}
+</form>
+{% for comment in comments %}
+    <li>{{ comment.content }}</li>
+    <li>{{ comment.created_at }}</li>
+    <hr>
+{% empty %}
+    <p>댓글 작성 해주세요</p>
+{% endfor %}
+
+{% for comment in article.comment_set.all %}
+    <li>{{ comment.content }}</li>
+    <li>{{ comment.created_at }}</li>
+    <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST" 
+    onclick="return confirm('진짜 지울래?')">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+    </form>
+    <hr>
+{% endfor %}
+
+{% endblock %}
