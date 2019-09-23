@@ -7,7 +7,7 @@
 <p>수정일자 : {{ article.updated_at }}</p>
 <hr>
 <p>{{ article.content }}</p>
-<img src="{{ article.image.url }}" alt="article.image.name"><br>
+<img src="{{ article.image_thumbnail.url }}" alt="article.image_thumbnail.name"><br>
 <!-- a tag : GET -->
 <a href="{% url 'articles:index' %}">목록으로</a>
 <form action="{% url 'articles:delete' article.pk %}" method="POST" 
